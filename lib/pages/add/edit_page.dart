@@ -6,15 +6,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 const List<String> listOption = ["Food", "Fashion", "Electronic", "Other"];
 
-class AddPage extends StatefulWidget {
-  final Function onSave;
-  const AddPage({super.key, required this.onSave});
+class EditPage extends StatefulWidget {
+  final Transaction selectedData;
+  const EditPage({super.key, required this.selectedData});
 
   @override
-  State<AddPage> createState() => _AddPageState();
+  State<EditPage> createState() => _EditPageState();
 }
 
-class _AddPageState extends State<AddPage> {
+class _EditPageState extends State<EditPage> {
   String? dropdownValue;
   bool isOpened = true;
   TextEditingController amountController = TextEditingController();
@@ -27,20 +27,13 @@ class _AddPageState extends State<AddPage> {
     symbol: 'Rp',
   );
 
-  Future<void> saveTransaction(num amount, String note, String type) async {
-    bool isSuccess = await Transaction.createTransaction(amount, note, type);
-
-    if (!isSuccess && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-        "Failed to save transaction",
-        style: GoogleFonts.openSans(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: Colors.white,
-        ),
-      )));
-    }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    amountController.text = _formatter.formatDouble(widget.selectedData.amount);
+    noteController.text = widget.selectedData.note;
+    dropdownValue = widget.selectedData.type;
   }
 
   @override
@@ -157,9 +150,6 @@ class _AddPageState extends State<AddPage> {
           ),
           GestureDetector(
             onTap: () {
-              saveTransaction(_formatter.getUnformattedValue(),
-                  noteController.text, dropdownValue!);
-              widget.onSave();
               Navigator.pop(context);
             },
             child: Container(
@@ -181,43 +171,6 @@ class _AddPageState extends State<AddPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class NumButton extends StatelessWidget {
-  final String value;
-  const NumButton({super.key, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 82,
-      width: 82,
-      decoration: const BoxDecoration(
-        color: ColorConstant.secondary,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey, //color of shadow
-            spreadRadius: -2, //spread radius
-            blurRadius: 4, // blur radius
-            offset: Offset(0, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Center(
-        child: Text(
-          value,
-          style: GoogleFonts.openSans(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: ColorConstant.primary,
-          ),
-        ),
       ),
     );
   }

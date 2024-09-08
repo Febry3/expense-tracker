@@ -1,6 +1,5 @@
 import 'package:expense_tracker/constanta.dart';
 import 'package:expense_tracker/custom_icon_icons.dart';
-import 'package:expense_tracker/local_storage/local_storage.dart';
 import 'package:expense_tracker/models/transaction.dart';
 import 'package:expense_tracker/pages/add/add_page.dart';
 import 'package:expense_tracker/pages/analytic/analytic_page.dart';
@@ -32,8 +31,6 @@ class _NavigationState extends State<Navigation> {
 
   @override
   void initState() {
-    // TODO: implement initState
-
     super.initState();
     getData();
   }
@@ -54,10 +51,14 @@ class _NavigationState extends State<Navigation> {
                   return Padding(
                     padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: const SizedBox(
-                      height: 400,
+                    child: SizedBox(
+                      height: 500,
                       width: double.infinity,
-                      child: AddPage(),
+                      child: AddPage(onSave: () {
+                        setState(() {
+                          getData();
+                        });
+                      }),
                     ),
                   );
                 });
@@ -72,6 +73,7 @@ class _NavigationState extends State<Navigation> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: NavigationBar(
+          backgroundColor: const Color.fromARGB(255, 255, 252, 252),
           onDestinationSelected: (value) {
             setState(() {
               _selectedIndex = value;
@@ -121,8 +123,10 @@ class _NavigationState extends State<Navigation> {
               listTransaction: listTransaction,
               weeklyTransaction: weeklyData,
             ),
-            const TransactionPage(),
-            const AddPage(),
+            TransactionPage(
+              listTransaction: listTransaction,
+            ),
+            const SizedBox(),
             AnalyticPage(
               weeklyData: weeklyData,
             ),

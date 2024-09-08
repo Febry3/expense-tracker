@@ -18,7 +18,7 @@ class AuthService {
       LocalStorage().writeData("token", responseData['token']);
       return responseData;
     } on DioException catch (e) {
-      print(LocalStorage.token);
+      print(e);
       return await e.response!.data;
     }
   }

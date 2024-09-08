@@ -47,8 +47,70 @@ class Transaction {
       // if (e is DioException) {
       //   print(e);
       // }
+
+      return listTransaction;
+    }
+  }
+
+  static Future<List<Transaction>> getTransactionByDate(
+      String from, String to) async {
+    List<Transaction> listTransaction = [];
+    try {
+      var response = await Dio().get(
+        "http://10.0.2.2:8000/api/date/transaction",
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer ${LocalStorage.token}",
+          },
+        ),
+        data: {
+          "from": from,
+          "to": to,
+        },
+      );
+
+      List<dynamic> data = response.data['data'];
+
+      for (var x in data) {
+        listTransaction.add(Transaction.fromJson(x));
+      }
+
+      return listTransaction;
+    } on DioException catch (e) {
+      // if (e is DioException) {
+      //   print(e);
+      // }
       print(e);
       return listTransaction;
+    }
+  }
+
+  static Future<bool> createTransaction(
+      num amount, String note, String type) async {
+    try {
+      await Dio().post(
+        "http://10.0.2.2:8000/api/transaction",
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer ${LocalStorage.token}",
+          },
+        ),
+        data: {
+          "note": note,
+          "amount": amount,
+          "type": type,
+        },
+      );
+
+      return true;
+    } on DioException catch (e) {
+      // if (e is DioException) {
+      //   print(e);
+      // }
+      print(e.response);
+      return false;
     }
   }
 }
@@ -89,7 +151,7 @@ class WeeklyTransaction {
       // if (e is DioException) {
       //   print(e);
       // }
-      print(e);
+
       return weeklyTransaction;
     }
   }

@@ -76,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return const Navigation();
       }));
-    } on Exception catch (_) {
+    } on Exception catch (e) {
+      print(e);
       return;
     }
   }
