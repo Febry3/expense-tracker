@@ -8,10 +8,12 @@ import 'package:google_fonts/google_fonts.dart';
 class HomePage extends StatefulWidget {
   final List<Transaction> listTransaction;
   final List<WeeklyTransaction> weeklyTransaction;
+  final Function onPressed;
   const HomePage(
       {super.key,
       required this.listTransaction,
-      required this.weeklyTransaction});
+      required this.weeklyTransaction,
+      required this.onPressed});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -98,7 +100,10 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 8,
               ),
-              TransactionList(listTransaction: widget.listTransaction)
+              TransactionList(
+                listTransaction: widget.listTransaction,
+                onPressed: widget.onPressed,
+              )
             ],
           ),
         ),

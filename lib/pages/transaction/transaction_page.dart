@@ -6,8 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TransactionPage extends StatefulWidget {
   final List<Transaction> listTransaction;
+  final Function onPressed;
 
-  const TransactionPage({super.key, required this.listTransaction});
+  const TransactionPage(
+      {super.key, required this.listTransaction, required this.onPressed});
 
   @override
   State<TransactionPage> createState() => _TransactionPageState();
@@ -233,8 +235,10 @@ class _TransactionPageState extends State<TransactionPage> {
                 height: 12,
               ),
               TransactionList(
-                  listTransaction:
-                      isSearch ? searchedList : widget.listTransaction)
+                listTransaction:
+                    isSearch ? searchedList : widget.listTransaction,
+                onPressed: widget.onPressed,
+              ),
             ],
           ),
         ),

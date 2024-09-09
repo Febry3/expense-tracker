@@ -29,6 +29,12 @@ class _NavigationState extends State<Navigation> {
     });
   }
 
+  void onPressed() {
+    setState(() {
+      getData();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,9 +61,7 @@ class _NavigationState extends State<Navigation> {
                       height: 500,
                       width: double.infinity,
                       child: AddPage(onSave: () {
-                        setState(() {
-                          getData();
-                        });
+                        onPressed();
                       }),
                     ),
                   );
@@ -122,9 +126,15 @@ class _NavigationState extends State<Navigation> {
             HomePage(
               listTransaction: listTransaction,
               weeklyTransaction: weeklyData,
+              onPressed: () {
+                onPressed();
+              },
             ),
             TransactionPage(
               listTransaction: listTransaction,
+              onPressed: () {
+                onPressed();
+              },
             ),
             const SizedBox(),
             AnalyticPage(

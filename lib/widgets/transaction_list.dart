@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> listTransaction;
+  final Function onPressed;
 
-  const TransactionList({super.key, required this.listTransaction});
+  const TransactionList(
+      {super.key, required this.listTransaction, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +29,12 @@ class TransactionList extends StatelessWidget {
                           padding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).viewInsets.bottom),
                           child: SizedBox(
-                            height: 500,
+                            height: 550,
                             width: double.infinity,
-                            child:
-                                EditPage(selectedData: listTransaction[index]),
+                            child: EditPage(
+                              selectedData: listTransaction[index],
+                              onPressed: onPressed,
+                            ),
                           ),
                         );
                       });

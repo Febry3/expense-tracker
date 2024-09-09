@@ -8,7 +8,9 @@ const List<String> listOption = ["Food", "Fashion", "Electronic", "Other"];
 
 class EditPage extends StatefulWidget {
   final Transaction selectedData;
-  const EditPage({super.key, required this.selectedData});
+  final Function onPressed;
+  const EditPage(
+      {super.key, required this.selectedData, required this.onPressed});
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -26,6 +28,39 @@ class _EditPageState extends State<EditPage> {
     decimalDigits: 0,
     symbol: 'Rp',
   );
+
+  Future<void> editTransaction(
+      int id, num amount, String note, String type) async {
+    bool isSuccess = await Transaction.editTransaction(id, amount, note, type);
+
+    if (!isSuccess && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        "Failed to save transaction",
+        style: GoogleFonts.openSans(
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          color: Colors.white,
+        ),
+      )));
+    }
+  }
+
+  Future<void> deleteTransaction(int id) async {
+    bool isSuccess = await Transaction.deleteTransaction(id);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        isSuccess ? "Success to save" : "Failed to save transaction",
+        style: GoogleFonts.openSans(
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          color: Colors.white,
+        ),
+      )));
+    }
+  }
 
   @override
   void initState() {
@@ -150,7 +185,13 @@ class _EditPageState extends State<EditPage> {
           ),
           GestureDetector(
             onTap: () {
+              editTransaction(
+                  widget.selectedData.id,
+                  _formatter.getUnformattedValue(),
+                  noteController.text,
+                  dropdownValue!);
               Navigator.pop(context);
+              widget.onPressed();
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width / 2 - 30,
@@ -162,6 +203,33 @@ class _EditPageState extends State<EditPage> {
               child: Center(
                 child: Text(
                   "Save",
+                  style: GoogleFonts.openSans(
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              deleteTransaction(widget.selectedData.id);
+              Navigator.pop(context);
+              widget.onPressed();
+            },
+            child: Container(
+              width: MediaQuery.sizeOf(context).width / 2 - 30,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Center(
+                child: Text(
+                  "Delete",
                   style: GoogleFonts.openSans(
                       fontSize: 20,
                       fontWeight: FontWeight.normal,

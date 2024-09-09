@@ -113,6 +113,56 @@ class Transaction {
       return false;
     }
   }
+
+  static Future<bool> editTransaction(
+      int id, num amount, String note, String type) async {
+    try {
+      await Dio().patch(
+        "http://10.0.2.2:8000/api/transaction/$id",
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer ${LocalStorage.token}",
+          },
+        ),
+        data: {
+          "note": note,
+          "amount": amount,
+          "type": type,
+        },
+      );
+
+      return true;
+    } on DioException catch (e) {
+      // if (e is DioException) {
+      //   print(e);
+      // }
+      print(e.response);
+      return false;
+    }
+  }
+
+  static Future<bool> deleteTransaction(int id) async {
+    try {
+      await Dio().delete(
+        "http://10.0.2.2:8000/api/transaction/$id",
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer ${LocalStorage.token}",
+          },
+        ),
+      );
+
+      return true;
+    } on DioException catch (e) {
+      // if (e is DioException) {
+      //   print(e);
+      // }
+      print(e.response);
+      return false;
+    }
+  }
 }
 
 class WeeklyTransaction {
