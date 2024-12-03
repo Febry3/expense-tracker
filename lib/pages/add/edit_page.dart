@@ -33,10 +33,10 @@ class _EditPageState extends State<EditPage> {
       int id, num amount, String note, String type) async {
     bool isSuccess = await Transaction.editTransaction(id, amount, note, type);
 
-    if (!isSuccess && mounted) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-        "Failed to save transaction",
+        isSuccess ? "Success to edit" : "Failed to save transaction",
         style: GoogleFonts.openSans(
           fontSize: 14,
           fontWeight: FontWeight.normal,
@@ -52,7 +52,7 @@ class _EditPageState extends State<EditPage> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-        isSuccess ? "Success to save" : "Failed to save transaction",
+        isSuccess ? "Success to delete" : "Failed to delete transaction",
         style: GoogleFonts.openSans(
           fontSize: 14,
           fontWeight: FontWeight.normal,
@@ -184,13 +184,17 @@ class _EditPageState extends State<EditPage> {
             height: 33,
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               editTransaction(
                   widget.selectedData.id,
                   _formatter.getUnformattedValue(),
                   noteController.text,
                   dropdownValue!);
+
+              await Future.delayed(const Duration(milliseconds: 250));
+              // ignore: use_build_context_synchronously
               Navigator.pop(context);
+
               widget.onPressed();
             },
             child: Container(
@@ -215,8 +219,10 @@ class _EditPageState extends State<EditPage> {
             height: 20,
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               deleteTransaction(widget.selectedData.id);
+              await Future.delayed(const Duration(milliseconds: 250));
+              // ignore: use_build_context_synchronously
               Navigator.pop(context);
               widget.onPressed();
             },

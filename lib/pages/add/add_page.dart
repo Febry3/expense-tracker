@@ -30,10 +30,10 @@ class _AddPageState extends State<AddPage> {
   Future<void> saveTransaction(num amount, String note, String type) async {
     bool isSuccess = await Transaction.createTransaction(amount, note, type);
 
-    if (!isSuccess && mounted) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-        "Failed to save transaction",
+        isSuccess ? "Success to save" : "Failed to save transaction",
         style: GoogleFonts.openSans(
           fontSize: 14,
           fontWeight: FontWeight.normal,
@@ -156,11 +156,12 @@ class _AddPageState extends State<AddPage> {
             height: 33,
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               saveTransaction(_formatter.getUnformattedValue(),
                   noteController.text, dropdownValue!);
-              widget.onSave();
+              await Future.delayed(const Duration(milliseconds: 25000));
               Navigator.pop(context);
+              widget.onSave();
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width / 2 - 30,
